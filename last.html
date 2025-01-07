@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RK Hospital</title>
+    <link rel="stylesheet" href="last.css">
+</head>
+<body>
+    <header>
+        <h1>RK Hospital</h1>
+    </header>
+    <nav>
+        <a href="#patients">Patients</a>
+        <a href="#doctors">Doctors</a>
+        <a href="#appointments">Appointments</a>
+        <a href="loop.html">Bill</a>
+    </nav>
+    <div class="container">
+        <section id="patients" class="section">
+            <h2>Patient Records</h2>
+            <p>Manage patient information including contact details, medical history, and more.</p>
+            <button id="add-patient-button">Add New Patient</button>
+            <table id="patient-table" border="1">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        <th>Medical History</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+
+        <section id="doctors" class="section">
+            <h2>Doctor Schedules</h2>
+            <p>View and manage doctor availability and schedules.</p>
+            <div class="doctor-schedule" id="doctor-schedule-list">
+                <h3>Doctors' Schedules</h3>
+                <ul id="doctor-list">
+                    <li>Dr. Sharma - <span id="dr-sharma-schedule">No appointments yet.</span>
+                        <button onclick="toggleScheduleDetails('dr-sharma-details')">View Appointments</button>
+                        <div id="dr-sharma-details" class="schedule-details"></div>
+                    </li>
+                    <li>Dr. Patel - <span id="dr-patel-schedule">No appointments yet.</span>
+                        <button onclick="toggleScheduleDetails('dr-patel-details')">View Appointments</button>
+                        <div id="dr-patel-details" class="schedule-details"></div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="appointments" class="section">
+            <h2>Appointments</h2>
+            <p>Book, view, and manage appointments with doctors.</p>
+            <form class="appointment-form" onsubmit="addAppointment(event)">
+                <label for="patient-name">Patient Name</label>
+                <input type="text" id="patient-name" placeholder="Enter patient name" required>
+
+                <label for="age">Patient Age</label>
+                <input type="number" id="age" placeholder="Enter patient age" required>
+
+                <label for="mobile">Mobile Number</label>
+                <input type="tel" id="mobile" placeholder="Enter mobile number" required>
+
+                <label for="doctor">Select Doctor</label>
+                <select id="doctor" required>
+                    <option value="dr-sharma">Dr. Sharma</option>
+                    <option value="dr-patel">Dr. Patel</option>
+                </select>
+
+                <label for="date">Appointment Date</label>
+                <input type="date" id="date" required>
+
+                <button type="submit">Book Appointment</button>
+            </form>
+        </section>
+    </div>
+    <script>
+            function addAppointment(event) {
+            event.preventDefault();
+            const patientName = document.getElementById('patient-name').value;
+            const age = document.getElementById('age').value;
+            const mobile = document.getElementById('mobile').value;
+            const doctor = document.getElementById('doctor').value;
+            const date = document.getElementById('date').value;
+
+            const doctorScheduleId = `${doctor}-schedule`;
+            const doctorSchedule = document.getElementById(doctorScheduleId);
+            const scheduleDetailsId = `${doctor}-details`;
+            const scheduleDetails = document.getElementById(scheduleDetailsId);
+
+            const appointmentDetails = `Patient: ${patientName}, Age: ${age}, Mobile: ${mobile}, Date: ${date}`;
+
+            if (doctorSchedule.textContent === 'No appointments yet.') {
+                doctorSchedule.textContent = "Appointments Available.";
+            }
+
+            const appointmentItem = document.createElement('p');
+            appointmentItem.textContent = appointmentDetails;
+            scheduleDetails.appendChild(appointmentItem);
+
+            alert('Appointment added successfully!');
+            document.querySelector('.appointment-form').reset();
+        }
+
+  
+        function toggleScheduleDetails(id) {
+            const details = document.getElementById(id);
+            details.style.display = details.style.display === 'none' || !details.style.display ? 'block' : 'none';
+        }
+
+        document.getElementById('add-patient-button').addEventListener('click', function () {
+            const patientName = prompt('Enter patient name:');
+            const contactDetails = prompt('Enter contact details:');
+            const medicalHistory = prompt('Enter medical history:');
+
+            if (patientName && contactDetails && medicalHistory) {
+                const tableBody = document.querySelector('#patient-table tbody');
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td>${patientName}</td>
+                    <td>${contactDetails}</td>
+                    <td>${medicalHistory}</td>
+                    <td><button class="delete-btn">Delete</button></td>
+                `;
+
+                row.querySelector('.delete-btn').addEventListener('click', function () {
+                    tableBody.removeChild(row);
+                });
+
+                tableBody.appendChild(row);
+            } else {
+                alert('All fields are required!');
+            }
+        });
+    </script>
+</body>
+</html>
